@@ -1,19 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="current">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>TwitchIntegration</AssemblyName>
     <RootNamespace>TwitchIntegration</RootNamespace>
-    <FileUpgradeFlags>40</FileUpgradeFlags>
-    <UpgradeBackupLocation>C:\Users\kyred\OneDrive\Documents\GitHub\TwitchIntegration\Backup1\</UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
-    <Configurations>Debug;Release</Configurations>
-    <ApplicationIcon />
-    <OutputType>Library</OutputType>
-    <StartupObject />
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.5" />
-  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\libs\Assembly-CSharp.dll</HintPath>
@@ -319,7 +311,9 @@
       <HintPath>..\libs\Zio.dll</HintPath>
     </Reference>
   </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="echo F|xcopy $(TargetPath) &quot;$(SolutionDir)docs\TwitchIntegration\$(TargetFileName)&quot; /Y" />
   </Target>
+
 </Project>
