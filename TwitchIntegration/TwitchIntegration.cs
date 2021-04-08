@@ -65,6 +65,14 @@ namespace TwitchIntegration
             }
         }
 
+        [ConCommand(commandName = "tspeak", flags = ConVarFlags.None, helpText = "Send message to Twitch. Usage: tspeak [message]")]
+        private static void OnTwitchSpeakCommand(ConCommandArgs args)
+        {
+            Debug.Log("Sending message to chat.");
+            string chatMsg = args.Count > 0 ? args[0] : "";
+
+            SendChatMessage(chatMsg);
+        }
         private async void OnAuthorized(object sender, AuthorizedEventArgs e)
         {
             this.accessToken = e.AccessToken;
@@ -90,18 +98,33 @@ namespace TwitchIntegration
 
             client.Initialize(credentials, channelName ?? username);
 
+            client.OnJoinedChannel += Client_OnJoinedChannel;
             client.OnMessageReceived += OnMessageReceived;
             client.OnConnected += (_, __) => Chat.AddMessage($"[<color=#6441a5>Twitch</color>] Connected to {channelName ?? username}'s channel as {username}");
 
             client.Connect();
-
+            Debug.Log(client.IsConnected);
+            client.JoinChannel(channelName ?? username);
+            Debug.Log(client.IsInitialized);
+            Debug.Log(client.JoinedChannels);
             On.RoR2.Chat.AddMessage_ChatMessageBase += Chat_AddMessage_ChatMessageBase;
         }
 
         public static void SendChatMessage(string message)
         {
+            Debug.Log(client.IsConnected);
             if (client.IsConnected)
+            {
+                Debug.Log("Send Chat Message");
                 client.SendMessage(channelName ?? username, message);
+            }
+        }
+
+        private void Client_OnJoinedChannel(object sender, OnJoinedChannelArgs e)
+        {
+            Debug.Log("OnJoinedChannel");
+            System.Console.WriteLine("Hey guys! I am a bot connected via TwitchLib!");
+            client.SendMessage(e.Channel, "Hey guys! I am a bot connected via TwitchLib!");
         }
 
         private void Chat_AddMessage_ChatMessageBase(On.RoR2.Chat.orig_AddMessage_ChatMessageBase orig, Chat.ChatMessageBase message)
